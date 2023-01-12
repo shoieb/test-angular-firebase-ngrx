@@ -8,14 +8,11 @@ import { of } from 'rxjs';
 
 @Injectable()
 export class MessageEffect {
-	constructor(
-		private actions$: Actions,
-		private _messageService: MessageService,
-		private _router: Router,
-	) { }
+	constructor(private _actions$: Actions,
+		private _messageService: MessageService) { }
 
 	loadMessage$ = createEffect(() =>
-		this.actions$.pipe(
+		this._actions$.pipe(
 			ofType(MessageActions.FetchMessage),
 			switchMap(() =>
 				this._messageService.getAllMessages().pipe(
@@ -27,7 +24,7 @@ export class MessageEffect {
 	)
 
 	loadMessageByID$ = createEffect(() =>
-		this.actions$.pipe(
+		this._actions$.pipe(
 			ofType(MessageActions.FetchMessageByID),
 			switchMap(({ id }) =>
 				this._messageService.getMessageById(id).pipe(
@@ -39,12 +36,11 @@ export class MessageEffect {
 	)
 
 	addMessage$ = createEffect(() =>
-		this.actions$.pipe(
+		this._actions$.pipe(
 			ofType(MessageActions.AddMessage),
 			mergeMap(({ message }) =>
 				of(this._messageService.saveMessage(message)).pipe(
 					map(() => MessageActions.AddMessageSuccess({ message })),
-					tap(() => console.log('Close mat popup')),
 					catchError(error => of(MessageActions.AddMessageFailure({ error })))
 				),
 			)
@@ -52,12 +48,11 @@ export class MessageEffect {
 	)
 
 	editMessage$ = createEffect(() =>
-		this.actions$.pipe(
+		this._actions$.pipe(
 			ofType(MessageActions.EditMessage),
 			mergeMap(({ id, message }) =>
 				of(this._messageService.updateMessage(id, message)).pipe(
 					map(() => MessageActions.EditMessageSuccess({ message })),
-					tap(() => this._router.navigate(['/fetch-message'])),
 					catchError(error => of(MessageActions.EditMessageFailure({ error })))
 				),
 			)
@@ -65,7 +60,7 @@ export class MessageEffect {
 	)
 
 	deleteMessage$ = createEffect(() =>
-		this.actions$.pipe(
+		this._actions$.pipe(
 			ofType(MessageActions.DeleteMessage),
 			mergeMap(({ id }) =>
 				of(this._messageService.deleteMessage(id)).pipe(

@@ -9,24 +9,26 @@ import { Message } from "../models/message";
 })
 export class MessageService {
 
-	readonly PATH = "Messages";
+	readonly PATH = "messages";
 
-	constructor(private db: AngularFirestore) { }
+	constructor(private _db: AngularFirestore) { }
 
 	saveMessage(message: Message) {
 		const messageData = JSON.parse(JSON.stringify(message));
-		return this.db.collection(this.PATH).add(messageData);
+		return this._db.collection(this.PATH).add(messageData);
 	}
 
 	getAllMessages(): Observable<Message[]> {
-		const messageList = this.db
+		const messageList = this._db
 			.collection<Message>(this.PATH, (ref) => ref.orderBy("name"))
 			.snapshotChanges()
 			.pipe(
 				map((actions) => {
 					return actions.map((c) => ({
-						messageId: c.payload.doc.id,
-						...c.payload.doc.data(),
+						id: c.payload.doc.id,
+						name: c.payload.doc.data().name,
+						message: c.payload.doc.data().message,
+						date: c.payload.doc.data().date
 					}));
 				})
 			);
@@ -34,7 +36,7 @@ export class MessageService {
 	}
 
 	getMessageById(messageId: string): Observable<Message> {
-		const messageData = this.db
+		const messageData = this._db
 			.doc<Message>(`${this.PATH}/` + messageId)
 			.valueChanges();
 		return <Observable<Message>>messageData;
@@ -42,10 +44,10 @@ export class MessageService {
 
 	updateMessage(messageId: string, message: Message) {
 		const messageData = JSON.parse(JSON.stringify(message));
-		return this.db.doc(`${this.PATH}/` + messageId).update(messageData);
+		return this._db.doc(`${this.PATH}/` + messageId).update(messageData);
 	}
 
 	deleteMessage(messageId: string) {
-		return this.db.doc(`${this.PATH}/` + messageId).delete();
+		return this._db.doc(`${this.PATH}/` + messageId).delete();
 	}
 }

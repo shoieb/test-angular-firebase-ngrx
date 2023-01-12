@@ -110,7 +110,6 @@ export const reducer = createReducer(
 	(console.log('DeleteMessage reducer called'), {
 		...state,
 		loading: true,
-
 	})),
 
 	on(MessageActions.DeleteMessageSuccess, (state, { id }) =>

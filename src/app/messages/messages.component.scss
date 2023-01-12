@@ -1,0 +1,25 @@
+.messages {
+	margin: 10px;
+	.table-wrapper {
+		margin-top: 25px;
+		.mat-column-id {
+			width: 20%;
+		}
+		.mat-column-name {
+			width: 20%;
+		}
+		.mat-column-message {
+			width: 30%;
+		}
+		.mat-column-date {
+			width: 20%;
+		}
+		.mat-column-actions {
+			width: 10%;
+		}
+	}
+
+	.spinner-wrapper {
+		margin: 15px auto;
+	}
+}

@@ -1,31 +1,35 @@
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
-import { environment } from 'src/environments/environment.prod';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { AngularFirestoreModule } from "@angular/fire/compat/firestore";
-import { AngularFireModule } from "@angular/fire/compat";
+import { MatToolbarModule } from '@angular/material/toolbar';
+
 import { AppRoutingModule } from './app-routing.module';
+import { NavBarComponent } from './nav-bar/nav-bar.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+
 import { AppComponent } from './app.component';
-import { StoreModule } from '@ngrx/store';
-import { EffectsModule } from '@ngrx/effects';
-import { MessageEffect } from './state/effects/message.effect';
-import { messageReducer } from './state/reducers/message.reduce';
+import { DomainModule } from './domain/domain.module';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
 	declarations: [
-		AppComponent
+		AppComponent,
+		NavBarComponent
 	],
 	imports: [
 		BrowserModule,
+		BrowserAnimationsModule,
+		CommonModule,
+		FormsModule,
 		AppRoutingModule,
 		FormsModule,
-		AngularFireModule.initializeApp(environment.firebaseConfig),
-		AngularFirestoreModule,
-		StoreModule.forRoot({
-			message: messageReducer,
-		}),
-		EffectsModule.forRoot([MessageEffect])
+		DomainModule,
+		MatToolbarModule,
+		MatButtonModule,
+		MatIconModule
 	],
 	providers: [],
 	bootstrap: [AppComponent]
